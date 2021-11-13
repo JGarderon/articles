@@ -11,15 +11,15 @@ Ce sont aussi des besoins différents suivant notre casquette, particulièrement
   - comme responsable de dév celle des processus ; 
   - comme responsable d'affaire celle des applications. 
 
-La différence est parfois subtile mais c'est bien __cet ensemble__ qui compte. Imaginez par exemple que vous mettez en ligne un site Wordpress personnel : votre premier souhait est de savoir si le site est bien accessible. Vous êtes en qualité ici de "responsable d'affaire" : vos "clients" (visiteurs) peuvent-ils y accéder ? Peut-être que oui, peut-être que non, avec quelle performance pour les pages appelées... peu importe que vous soyez salarié, bénévole, amateur. La position critique est la meme. 
+La différence est parfois subtile mais c'est bien __cet ensemble__ qui compte. Imaginez par exemple que vous mettez en ligne un site Wordpress personnel : votre premier souhait est de savoir si le site est bien accessible. Vous êtes en qualité ici de "responsable d'affaire" : vos "clients" (visiteurs) peuvent-ils y accéder ? Peut-être que oui, peut-être que non ; avec quelle performance pour les pages appelées... peu importe que vous soyez salarié, bénévole, amateur. La position critique est la même. 
 
-S'il n'est pas accessible ou difficilement (délai, erreur), pourquoi ? Un test sur une URL n'est pas suffisante : est-ce le Nginx frontal, est-ce PHP-FPM, est-ce la base de données, est-ce un parefeu ou tout autre chose... ? Est-ce votre développement ou votre exploitation qui pêche ? La machine-même, est-elle accessible ; est-elle suffisamment dimensionnée ? 
+S'il n'est pas accessible ou difficilement (délai, erreur), pourquoi cette situation ? Un test sur une URL n'est pas suffisante : est-ce le Nginx frontal, est-ce PHP-FPM, est-ce la base de données, est-ce un parefeu ou tout autre chose... ? Est-ce votre développement ou votre exploitation qui pêche ? La machine-même, est-elle accessible ; est-elle suffisamment dimensionnée ? 
 
 Si vous travaillez en direct sur cette dernière, vous allez parcourir chaque point : c'est long, laborieux, non-satisfaisant pour plus d'une ou deux machines. On voit alors l'intérêt d'Ansible pour automatiser ces tâches et les jouer avec régulièrement via AWX - Ansible Tower communautaire -, ou via une simple tâche CRON. 
 
-C'est cet exercice mental que je vous propose, mais comme prétexte pour servir de support afin de comprendre / approfondir certains aspects d'Ansible sans se perdre. 
+C'est cet exercice mental que je vous propose, comme prétexte pour servir de support afin de comprendre / approfondir certains aspects d'Ansible sans se perdre. 
 
-## Préparation son dossier de travail 
+## Préparation de notre dossier de travail 
 
 Il est de bon goût d'avoir un environnement virtuel Python pour travailler en démo / dév / test. Ansible est en Python, lors ne cherchons pas d'excuse: 
 
@@ -81,9 +81,9 @@ Notre poste et notre éditeur de texte préférés sont prêts ! Vous pouvez cr�
 
 ## "Gather facts" 
 
-C'est ce qui frappe la première fois qu'on lance l'outil. Une ligne apparaît, non souhaitée, et de prime abord on tente à l'oublier : "_TASK [Gathering Facts]..._". C'est pourtant le coeur nucléaire du système. 
+C'est ce qui frappe la première fois qu'on lance l'outil. Une ligne apparaît, non souhaitée, et de prime abord on tend à l'oublier : "_TASK [Gathering Facts]..._". C'est pourtant le coeur nucléaire du système. 
 
-Le _recueil des faits_ en bon français, est une opération qui est exécutée par défaut lorsque vous lançez Ansible en mode _playbook_ - sauf à spécifier le contraire donc. C'est notre premier appui à l'exercice. Réalisation un livre de recettes rapide : 
+Le _recueil des faits_ en bon français, est une opération qui est exécutée par défaut lorsque vous lançez Ansible en mode _playbook_ - sauf à spécifier le contraire donc. C'est notre premier appui à l'exercice. Réalisation d'un livre de recettes rapide : 
 
 ```yaml lancement.yml
 - name: Tester l'activité de mes applicatifs 
@@ -91,7 +91,7 @@ Le _recueil des faits_ en bon français, est une opération qui est exécutée p
   hosts: all 
 ```
 
-Avec un inventaire tout aussi rapide : 
+Avec un inventaire tout aussi rapide (n'oubliez cependant pas, de créer une VM configurée avant...) : 
 
 ```yaml inventaire.yml
 all:
@@ -297,7 +297,7 @@ WIN-AD                     : ok=2    changed=0    unreachable=0    failed=0    s
 
 ```
 
-Avec cette ligne sur votre console, même sans le débogue, vous savez déjà plusieurs choses : 
+Avec cette ligne sur votre console, même sans le débogue, lorsque l'étape de recueil est valide, vous savez déjà plusieurs choses : 
   - votre machine est accessible par le réseau déclaré (elle est donc allumée et opérationnelle sur l'accès distant via l'IP déclarée) ; 
   - votre inventaire est donc correct, car on a pu s'authentifier ; 
   - vous pouvez démarrer un shell, vous avez donc un minimum de droits pour agir... 
@@ -381,7 +381,7 @@ $data2 = $module.Params.data2
 
 $module.Result.ping = "$data - $data2" 
 
-# j'indique de manière factice que le système cible a changé 
+# j'indique de manière factice que le système cible a changé (pour la situation d'erreur, utiliser "failed") 
 $module.Result.changed = $true 
 
 # je sors, en produisant un JSON valide 
@@ -398,7 +398,7 @@ WIN-AD | CHANGED => {
 }
 ``` 
 
-Pour nos tests de vie, nous avons donc une piste sur le "comment" : l'usage de modules existants ([et la liste est longue](https://docs.ansible.com/ansible/2.8/modules/list_of_all_modules.html)), comme produire les siens, propres à son métier / à son besoin. Que ce soit directement en Python, soit en Powershell (ou [en ce que vous voulez !](https://docs.ansible.com/ansible/latest/plugins/shell.html)). 
+Pour nos tests de vie, nous avons donc une piste sur le 'comment' : l'usage de modules existants ([et la liste est longue](https://docs.ansible.com/ansible/2.8/modules/list_of_all_modules.html)), comme produire les siens, propres à son métier / à son besoin. Que ce soit directement en Python, soit en Powershell (ou [en ce que vous voulez !](https://docs.ansible.com/ansible/latest/plugins/shell.html)). 
 
 ## Gérer les faits d'un parc 
 
@@ -406,9 +406,9 @@ Nous avons vu deux points essentiels :
   - récupérer automatiquement un grand nombre d'informations, à partir l'équivalent du module par défaut "gather_facts" ; 
   - créer les siens et les stocker localement sur la machine Ansible. 
 
-Cependant cette histoire de faits récupérés, d'exécution locale, peut s'avérer compliquée au quotidien. Il faut comprendre que la sérialisation des variables et du contexte de la machine Ansible vers la machine cible, et la remontée des résultats, ne veut pas dire que les machines cibles communiquent directement elles (pas du tout). 
+Cependant cette histoire de faits récupérés, d'exécution locale, peut s'avérer compliquée au quotidien. Il faut comprendre que la sérialisation des variables et du contexte de la machine Ansible vers la machine cible, et la remontée des résultats, ne veulent pas dire que les machines cibles communiquent directement elles (pas du tout). Elles communiquent exclusivement vers et via la machine Ansible, qui agit comme le contrôleur dans notre cas (ou le client, si l'on se place dans une dénomination réseau).  
 
-De la même façon, la portée des faits est particulière : la machine Ansible est appelable comme machine cible, "indifféremment" des autres, via "_hosts: localhost_". Elle n'a donc pas par défaut, une autre machine cible, avec qui elle ne partage pas des variables autres que celles globales et dans l'instant où elles sont au moment de l'appel. 
+De la même façon, la portée des faits est particulière : la machine Ansible est appelable comme machine cible, "indifféremment" des autres, via "_hosts: localhost_". Elle n'a donc pas par défaut l'environnement d'une autre machine cible, avec qui elle ne partage pas des variables autres que celles globales et dans l'instant où elles sont au moment de l'appel. 
 
 Illustrons-ça (petite précision sur les noms en commentaire du code) : 
 
@@ -493,7 +493,7 @@ ok: [WIN-AD]
 META: ran handlers
 ``` 
 
-Avoir une remontée d'information vers le contrôleur passe donc par le retour de votre module et de son emballage (son "_wrapper_", qui est un mécanisme interne à Ansible). Et la machine cible "_localhost_" n'est pas réellement dans l'inventaire déclaré, mais une sorte d'entrée fantôche, toujours présente. __Ne vous y méprenez pas, cette distinction a un impact.__ Voyons le passage des modifications entre les différentes recettes ("_plays_") : 
+Avoir une remontée d'information vers le contrôleur passe donc par le retour de votre module et de son emballage (son "_wrapper_", qui est un mécanisme interne à Ansible). Et la machine cible "_localhost_" n'est pas réellement dans l'inventaire déclaré, mais une sorte d'entrée fantôche, toujours présente. __Ne vous y méprenez pas, cette distinction a un impact.__ Ainsi voyons le passage des modifications entre les différentes recettes ("_plays_") : 
 
 ```yaml lancement2.yml
 - name: Tester quelque chose (1) 
@@ -678,12 +678,12 @@ C'est cet aspect qui est intéressant : notre test de vie va remonter des inform
 
 ## Produire un rapport dans un format déterminé (ici XML) 
 
-Bien, nous avons désormais pleins d'astuces pour (comprendre et) assurer l'organisation de nos tests de vie avec cet outil fabuleux. Ce sont des modules par défaut ou communautaires (ou les nôtres) qui assureront les tests (connexions à la base de données, ping de machine ou encore CURL d'URL, etc.). Les données remonteront au contrôleur Ansible et passeront de tâche en tâche, pour déterminer un état suivant une logique métier. 
+Bien, nous avons désormais pleins d'astuces pour (comprendre et) assurer l'organisation de nos tests de vie avec cet outil fabuleux. Ce sont des modules par défaut ou communautaires (ou les nôtres) qui assureront les tests (connexions à la base de données, _ping_ de machine ou encore _CURL_ d'URL, etc.). Les données remonteront au contrôleur Ansible et passeront de tâche en tâche, pour déterminer un état suivant une logique métier. 
 
 Mais ces résultats, qu'en faire ? Faut-il envoyer par exemple une alerte pour chaque machine, même en cas de retour positif ? Si vous avez suivi des cours de logique floue (ou un peu de Bayes) et des théories de l'info-com', plusieurs points sont à considérer pour répondre à cette question : 
   - l'information, c'est ce qui sort de "l'ordinaire" dans un environnement donné : dans notre cas, on alerte lors d'un changement d'état (une perte de service alors que tout allait bien ; ou inversement en cas de reprise). Inutile d'alerte pour dire "ça va toujours (pas) bien" ; 
   - il faut des états intermédiaires, particulièrement si vous n'avez pas une machine formant un noeud unique. En cas de distribution, on alertera différemment l'état d'une machine ou d'un service de noeud, de l'ensemble d'un parc ; en privilégiant dans le second, l'alerte en cas de dépassement à la hausse ou à la baisse d'un seuil. Exemple : 80% d'activité, en baisse, de mes machines Web. 
-  - on peut définir un état de santé d'un SI (donc d'au moins deux composants, eux-même pouvant être 1 ou _n_ processus), au travers d'une formule. Pour l'exemple précédent, l'état d'un SI, cela peut être la multiplication du taux de réussite des tests individuels, addionné ensuite pour chacune des machines. En dessous d'un certain délai, de tous les tests, et ce taux serait considéré valide à partir d'une certaine valeur. 
+  - on peut définir un état de santé d'un SI (donc d'au moins deux composants, eux-même pouvant être 1 ou _n_ processus), au travers d'une formule. Pour l'exemple précédent, l'état d'un SI, cela peut être la multiplication du taux de réussite des tests individuels, addionné ensuite pour chacune des machines (et ramené à 1, pour la lisibilité, en pondérant durant l'addition, chaque note ou composant). En dessous d'un certain délai, de tous les tests, et ce taux serait considéré valide à partir d'une certaine valeur. 
 
 On voit donc l'intérêt d'Ansible : 
   - ne pas ré-inventer la roue : un module par grand test (BdD, service Web, etc.) ; 
@@ -691,7 +691,9 @@ On voit donc l'intérêt d'Ansible :
   - définir des livres de recettes qui utilisent intelligemment les rôles, pour cibler un intérêt métier (dont les 3 classiques : responsabilité d'affaire ; d'exploitation ; de développement) ; 
   - agir sur de nombreuses machines à la fois et remontée - ou non - la bonne information, au bon moment, pour la bonne cible. 
 
-Chaque lancement d'un livre de recette doit alimenter un jeu de données, par définition un jeu historisé. Ansible peut aussi s'en charger, même si c'est loin d'être sa cible première. Pour l'exercice, j'ai choisi [XML, car la manipulation via CRUD est disponible](https://docs.ansible.com/ansible/2.8/modules/xml_module.html) nativement. 
+L'articulation technique et architecturale ou organisationnelle, est complète, cohérente, lisible. 
+
+Cependant chaque lancement d'un livre de recette doit alimenter un jeu de données, par définition un jeu historisé. Ansible peut aussi s'en charger, même si c'est loin d'être sa cible première. Pour l'exercice, j'ai choisi [XML, car la manipulation via CRUD est disponible](https://docs.ansible.com/ansible/2.8/modules/xml_module.html) nativement. 
 
 
 ```yaml lancement.yml
@@ -790,7 +792,7 @@ C'est parfait, notre rapport a été alimenté :
 <hotes><WIN-AD date="2021-11-10T11:54:37Z" erreur="non"> <particulier> toto ! </particulier> <general> Stand-alone server ( et d'autres valeurs si on veut...) </general> </WIN-AD></hotes>
 ```
 
-Voyons maintenant si l'on ajoute un hote en erreur, par exemple si ce dernier n'est pas encore (ou plus) accessible : 
+Voyons maintenant si l'on ajoute un hôte en erreur, par exemple si ce dernier n'est pas encore (ou plus) accessible : 
 
 ```yaml inventaire.yml
 all:
@@ -847,16 +849,22 @@ On note d'ailleurs qu'il y a le résultat de l'exécution précédente. J'ai mis
 ```xml rapport.xml
 <?xml version='1.0' encoding='UTF-8'?>
 <hotes>
+	
 	<!-- ici la première exécution --> 
 	<WIN-AD date="2021-11-10T11:57:42Z" erreur="non"> 
-		<particulier> toto ! </particulier> <general> Stand-alone server ( et d'autres valeurs si on veut...) </general> 
+		<particulier> toto ! </particulier> 
+		<general> Stand-alone server ( et d'autres valeurs si on veut...) </general> 
 	</WIN-AD>
+	
 	<!-- ici la deuxième exécution --> 
 	<WIN-AD date="2021-11-10T11:58:02Z" erreur="non"> 
-		<particulier> toto ! </particulier> <general> Stand-alone server ( et d'autres valeurs si on veut...) </general> 
+		<particulier> toto ! </particulier> 
+		<general> Stand-alone server ( et d'autres valeurs si on veut...) </general> 
 	</WIN-AD>
 	<WIN-IIS date="2021-11-10T11:58:02Z" erreur="oui"/>
+	
 	<!-- les prochaines s'ajouteront après ce commentaire --> 
+	
 </hotes>
 ```
 
