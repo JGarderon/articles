@@ -8,7 +8,7 @@
       this = new() # pour l'encapsulation 
       this.a = a 
       this.additionner = function (b::Any) # liaison via une fct anonyme...
-        TotoAdditionner( this, b ) # ... on garde ainsi le composition 
+        TotoAdditionner( this, b ) # ... on garde ainsi la composition 
       end 
       return this 
     end 
@@ -50,7 +50,7 @@
 
   t3.additionner( 1 )  
 
-  println( t3.a ) # 1 
+  println( t3.a ) # 100 
 
   t3.additionner( "1" ) 
 
